@@ -7,7 +7,11 @@
             <div class="card">
                 <div class="card-header">
                     <span>{{ __('Aquariums') }}</span>
-                    <span class="float-right"><button type="button" class="btn btn-primary">Add</button></span>
+                    <span class="float-right">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            Add
+                        </button>
+                    </span>
                 </div>
                 <div class="card-body">
                     @if (session('status'))
@@ -46,7 +50,7 @@
                                             <td>{{$aquarium->fish}}</td>
                                             <td>{{$aquarium->created_at}}</td>
                                             <td align="center">
-                                                <button type="button" class="btn btn-primary">View</button>
+                                                <a class="btn btn-primary" href="{{url('aquaria/show')}}{{'/'}}{{$aquarium->id}}" role="button">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -59,4 +63,61 @@
         </div>
     </div>
 </div>
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <form action="{{url('aquaria/storeaquaria')}}" method="post" enctype="multipart/form-data">
+            @csrf
+            <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Aquarium</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row my-2">
+                        <div class="col-md-2">
+                            <label>Description</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="description" class="form-control" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Glass Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="glass_type" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-md-2">
+                            <label>Size</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" name="size" min="0" step="0.1" class="form-control" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Shape</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="shape" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <span class="bi bi-save"> Save</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection

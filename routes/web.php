@@ -21,3 +21,12 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//customer claims
+Route::prefix('aquaria')->group(function (){
+    Route::post('storeaquaria', [App\Http\Controllers\UpdateController::class, 'storeaquaria'])->middleware('auth');
+    Route::post('storefish', [App\Http\Controllers\UpdateController::class, 'storefish'])->middleware('auth');
+    Route::get('show/{id}',[App\Http\Controllers\ViewController::class, 'show'])->middleware('auth');
+    Route::get('removefish/{id}',[App\Http\Controllers\UpdateController::class, 'removefish'])->middleware('auth');
+    Route::post('updatefish', [App\Http\Controllers\UpdateController::class, 'updatefish'])->middleware('auth');
+});

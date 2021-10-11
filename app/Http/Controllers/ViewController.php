@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class ViewController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -22,10 +22,43 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public static  function index()
+    public function show($id)
     {
         //get the list by API Call
-        $method = 'view_all';
+        $method = 'show_aquaria';
+
+        $data = [
+            "id" => $id,
+            "method" => $method,
+        ];
+
+        $encodedData = json_encode($data);
+        $acquaria = $this->getData($encodedData);
+
+        $fish_types = array('Bass',
+            'Bluefish',
+            'Buffalo Fish',
+            'Butterfish',
+            'Calamari',
+            'Carp',
+            'Catfish',
+            'Chilean sea bass',
+            'Flounder',
+            'Golden Snapper',
+            'Goldfish',
+            'Guppies',
+            'Grouper',
+            'Whitefish',
+            'Whiting');
+
+        return view('show',[
+            'acquaria'=>$acquaria,
+            'fish_types'=>$fish_types
+        ]);
+    }
+
+    public function getData($encodedData)
+    {
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -37,7 +70,7 @@ class HomeController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_POSTFIELDS =>'  {"method":"'.$method.'"}',
+            CURLOPT_POSTFIELDS => $encodedData,
             CURLOPT_HTTPHEADER => array(
                 'x-access-token: '.Auth::user()->access_token,
                 'Content-Type: application/json'
@@ -47,10 +80,6 @@ class HomeController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
 
-        $aquariums = json_decode($response);
-
-        return view('home',[
-            'aquariums'=>$aquariums
-        ]);
+        return json_decode($response);
     }
 }
